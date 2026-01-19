@@ -44,6 +44,10 @@ javac com/craftinginterpreters/lox/\*.java
 
 java com.craftinginterpreters.lox.Lox
 
+### To delete the classes and recompile
+
+find com/craftinginterpreters/lox -name "\*.class" -delete
+
 # Representing Code
 
 - Formal grammars
