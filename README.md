@@ -79,3 +79,15 @@ You may have multiple rules with the same name. When you reach a non-terminal wi
 
 Recursion in the grammar is a goo sgn that the language being defined is context-free instead of regular. In particular, recursion where the recursive non-terminal has productions on both sides implies that the language is not regular.
 Regular grammars can express repetition but they can;t keep count of how many repetitions there are, which is necessary to ensure that the string has the same number of width and on the side parts.
+
+### Metalanguages
+
+- Created by Robert Milnner
+- Here, you don't have classes with methods. Types and functions are totally distinct.
+- To implement an operation for a number of different types, you define a single function, in the body of that function, you use pattern matching to implement the operation for each type all in one place.
+
+### The Visitor Pattern
+
+- Many think the pattern has to do with traversing trees, which isn’t the case at all.
+- We are going to use it on a set of classes that are tree-like, but that’s a coincidence
+- It's about approximating the functional style within an OOP language
