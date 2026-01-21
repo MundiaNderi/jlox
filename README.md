@@ -1,3 +1,7 @@
+This repository contains my personal implementation and notes while working through Crafting Interpreters by Robert Nystrom.
+
+The goal is to deepen my understanding of parsing, AST construction, interpretation, and language design. My notes reflect design decisions, questions, and insights encountered during implementation. Challenges.md contains my solutions and reflections on the end-of-chapter exercises.
+
 # jlox interpreter
 
 ## A Tree Walk Interpreter
@@ -95,3 +99,62 @@ Regular grammars can express repetition but they can;t keep count of how many re
 - Many think the pattern has to do with traversing trees, which isn’t the case at all.
 - We are going to use it on a set of classes that are tree-like, but that’s a coincidence
 - It's about approximating the functional style within an OOP language
+
+# Parsing Expressions
+
+Lox's current expression grammar
+
+expression → literal
+| unary
+| binary
+| grouping ;
+
+literal → NUMBER | STRING | "true" | "false" | "nil" ;
+grouping → "(" expression ")" ;
+unary → ( "-" | "!" ) expression ;
+binary → expression operator expression ;
+operator → "==" | "!=" | "<" | "<=" | ">" | ">="
+| "+" | "-" | "\*" | "/" ;
+
+- Binary rule lets operands nests in any way they want which can affect the result of evaluating the parsed tree
+  - Precedence determins which operator is evaluated first in an expression containing a mixture of different operators.
+  - Associativity determines which operator is evaluated first in a series of the same operator
+  - left associative - MINUS => 5 - 3 - 1 => (5 -3) -1
+  - right associative - assignment operator (=), a = b = c => a = (b = c)
+
+Lox's precedence and associativity, similar to C
+| Name | Operators | Associates |
+| ---------- | ----------------- | ---------- |
+| Equality | `==` `!=` | Left |
+| Comparison | `>` `>=` `<` `<=` | Left |
+| Term | `-` `+` | Left |
+| Factor | `/` `*` | Left |
+| Unary | `!` `-` | Right |
+
+### Recursive Descent Parsing
+
+- Simplest way to build a parser and doesn't require using complex parser generator tools like Yacc, Bison or ANTLR
+- Fast, robust, and can support sophisticated error handling
+- GCC, V8 and Roslyn use recursive descent
+- Considereda top down parser as it starts from the top or the outermost grammar rule(expression) down to nested subexpressions
+
+### Syntax Errors
+
+A parser has two jobs
+
+- Given a valid sequence of tokens, produce a coreesponsing syntax tree.
+- Given an invalid sequence of tokens, detect aby errors and tell the user about their mistakes
+
+When a parser runs into a syntax error, it must:
+
+- Detect and report the error.
+- Avoid crashing or hanging
+
+A decent parser should be fast, report as many distinct errors as there are and minimize cascaded errors.
+
+Error recovery - The way a parser responds to an error and keeps going to look for later errors.
+
+#### Panic mode error recovery
+
+Parser enters panic mode as soon as it detects an error
+Then it goes into synchronization - Gets its state and the sequence of forthcoming tokens aligned such that the next token does match the rule being parsed
