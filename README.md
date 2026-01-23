@@ -136,13 +136,13 @@ Lox's precedence and associativity, similar to C
 - Simplest way to build a parser and doesn't require using complex parser generator tools like Yacc, Bison or ANTLR
 - Fast, robust, and can support sophisticated error handling
 - GCC, V8 and Roslyn use recursive descent
-- Considereda top down parser as it starts from the top or the outermost grammar rule(expression) down to nested subexpressions
+- Considered a top down parser as it starts from the top or the outermost grammar rule(expression) down to nested subexpressions
 
 ### Syntax Errors
 
 A parser has two jobs
 
-- Given a valid sequence of tokens, produce a coreesponsing syntax tree.
+- Given a valid sequence of tokens, produce a corresponding syntax tree.
 - Given an invalid sequence of tokens, detect aby errors and tell the user about their mistakes
 
 When a parser runs into a syntax error, it must:
@@ -156,5 +156,45 @@ Error recovery - The way a parser responds to an error and keeps going to look f
 
 #### Panic mode error recovery
 
-Parser enters panic mode as soon as it detects an error
+Parser enters panic mode as soon as it detects an error.
+
 Then it goes into synchronization - Gets its state and the sequence of forthcoming tokens aligned such that the next token does match the rule being parsed
+
+# Evaluating Expressions
+
+Options:
+
+- compile source code into machine code
+- Translate t to another high-level language
+- Reduce it to some byte code format for a virtual machine to run
+
+For our first interpreter, we will take the simplest shortest path and execute the syntax tree itself. Evaluate an expression and produce a value
+
+## Representing values
+
+- In Lox, values are created by literals, computed by expressions and stored in variables .
+- Given a Java variable with that static type, we must also be able to determine which kind of value it holds at runtime
+- - => Is it adding two numbers or concatenating two strings? We use a Java type that can hold numbers, strings, Boolean and more; java.lang.Object
+    - We determine if the runtime value is a number or a strng using Java's instanceof operator
+
+## Evaluating literals
+
+- Literals are the leaves of an expression tree
+- A literal is a bit of syntax that produces a value
+- Comes from the parsers domain
+- Values are an interpreter's concept , part of the runtime world
+
+## Evaluating unary expressions
+
+- Lox follows Ruby's simple rul: false and nil are false, and everything else is Truthy
+
+## Evaluating binary operators
+
+- Lox doesn't do implicit conversions in equality and Java does not either
+- We do have to handle nil/null specially so that we don't throw a NullPointerException if we try to call equals() on null
+
+# Runtime Errors
+
+- Failures that the language semantics demand we detect and report while the program is running (hence the name)
+- The fact that Lox is implemented in Java should be hidden to the user - graceful runtime error handling. Instead, we want them to understand a Lox runtime error occured and give them a message relevant to our language and their program
+- While a runtime error needs to stop evaluating the expression, it shouldn't kill the interpreter.
