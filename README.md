@@ -199,4 +199,15 @@ For our first interpreter, we will take the simplest shortest path and execute t
 - The fact that Lox is implemented in Java should be hidden to the user - graceful runtime error handling. Instead, we want them to understand a Lox runtime error occured and give them a message relevant to our language and their program
 - While a runtime error needs to stop evaluating the expression, it shouldn't kill the interpreter.
 
-### Detecting Runtime Errors
+# Statements and State
+
+- To support bindings, our interpreter needs internal state
+  - Define a variable at the beginning of the program => Hold on to the value of the aribale => Use the ariable at the end of the program
+- State and statements go hand in hand
+  - Staemnets - A side effect.
+
+In Lox: - An expression statement lets you place an expression where a statement is expected. - A print statement evaluates an expression and displays the result to the user.
+Lox is an imperatie, dynamically typed language
+
+- There is no place in grammar where both an expression and a statement are allowed. Operands of + are always expressions, never statements. The body of a while loop is always a statement
+  - Hence Expressions and statements are split into separate classes.

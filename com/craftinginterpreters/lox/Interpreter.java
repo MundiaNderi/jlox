@@ -22,7 +22,7 @@ class Interpreter implements Expr.Visitor<Object> {
     // evaluate parentheses
     // a grouping expression is just a wrapper around another expression
     @Override
-    public Object visistGroupingExpr(Expr.Grouping Expr) {
+    public Object visitGroupingExpr(Expr.Grouping expr) {
         return evaluate(expr.expression);
     }
 
@@ -53,6 +53,10 @@ class Interpreter implements Expr.Visitor<Object> {
             case MINUS:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left - (double) right;
+            case BANG_EQUAL:
+                return !isEqual(left, right);
+            case EQUAL_EQUAL:
+                return isEqual(left, right);
             case PLUS:
                 if (left instanceof Double && right instanceof Double) {
                     return (double) left + (double) right;
@@ -63,7 +67,6 @@ class Interpreter implements Expr.Visitor<Object> {
                 }
                 throw new RuntimeError(expr.operator,
                         "Operands must be two numbers or two strings.");
-                break;
             case SLASH:
                 checkNumberOperands(expr.operator, left, right);
                 return (double) left / (double) right;
@@ -82,7 +85,7 @@ class Interpreter implements Expr.Visitor<Object> {
 
         switch (expr.operator.type) {
             case MINUS:
-                checkNumberOperands(expr.operator, right);
+                checkNumberOperand(expr.operator, right);
                 return -(double) right;
             case BANG:
                 return !isTruthy(right);
@@ -94,10 +97,16 @@ class Interpreter implements Expr.Visitor<Object> {
     }
 
     // helper method to ensure operand is a number
-    private void checkNumberOperands(Token operator, Object operand) {
+    private void checkNumberOperand(Token operator, Object operand) {
         if (operand instanceof Double)
             return;
         throw new RuntimeError(operator, "Operand must be a number.");
+    }
+
+    private void checkNumberOperands(Token operator, Object left, Object right) {
+        if (left instanceof Double && right instanceof Double)
+            return;
+        throw new RuntimeError(operator, "Operands must be numbers.");
     }
 
     // helper method to determine truthiness of a value

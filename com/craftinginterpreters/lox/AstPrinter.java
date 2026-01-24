@@ -9,12 +9,12 @@ class AstPrinter implements Expr.Visitor<String> {
     // visit methods for each expression types
     // expressions with sub-expressions use the parenthesize helper methd
     @Override
-    public String visitBinaryExpr(Expr.Binary Expr) {
+    public String visitBinaryExpr(Expr.Binary expr) {
         return parenthesize(expr.operator.lexeme, expr.left, expr.right);
     }
 
     @Override
-    public String visitGroupigExr(Expr.Grouping expr) {
+    public String visitGroupingExpr(Expr.Grouping expr) {
         return parenthesize("group", expr.expression);
     }
 

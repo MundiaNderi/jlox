@@ -6,7 +6,7 @@ import static com.craftinginterpreters.lox.TokenType.*;
 //  consumes a flat input sequence
 // reads tokens instead of characters
 
-class parser {
+class Parser {
     // store the list of tokens and use current to point to the ext token waiting to
     // be parsed
     private static class ParseError extends RuntimeException {
@@ -16,7 +16,7 @@ class parser {
     private final List<Token> tokens;
     private int current = 0;
 
-    Parser (List<Token> tokens) {
+    Parser(List<Token> tokens) {
         this.tokens = tokens;
     }
 
@@ -34,7 +34,7 @@ class parser {
     }
 
     // == and !=
-    private Expr Equality() {
+    private Expr equality() {
         Expr expr = comparison();
 
         while (match(BANG_EQUAL, EQUAL_EQUAL)) {
@@ -52,7 +52,7 @@ class parser {
         while (match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL)) {
             Token operator = previous();
             Expr right = term();
-            expr = new Expr.binary(expr, operator, right);
+            expr = new Expr.Binary(expr, operator, right);
         }
 
         return expr;
@@ -77,7 +77,7 @@ class parser {
         while (match(SLASH, STAR)) {
             Token operator = previous();
             Expr right = unary();
-            expr = new Expr.Unary(expr, operator, right);
+            expr = new Expr.Unary(operator, right);
         }
         return expr;
     }
@@ -85,7 +85,7 @@ class parser {
     // unary operators like ! and -
     private Expr unary() {
         if (match(BANG, MINUS)) {
-            Token OPERATOR = previous();
+            Token operator = previous();
             Expr right = unary();
             return new Expr.Unary(operator, right);
 
@@ -116,7 +116,7 @@ class parser {
     }
 
     // check to see if theb current token has any of the given types
-    private boolean match(TokenTyoe... types) {
+    private boolean match(TokenType... types) {
         for (TokenType type : types) {
             if (check(type)) {
                 advance();
@@ -135,7 +135,7 @@ class parser {
 
     // returns true if the current token is of the given type but never consumes the
     // token
-    private boolean check(TokenType Type) {
+    private boolean check(TokenType type) {
         if (isAtEnd())
             return false;
         return peek().type == type;
