@@ -2,6 +2,17 @@ package com.craftinginterpreters.lox;
 
 class Interpreter implements Expr.Visitor<Object> {
 
+    // wrap a skin around the visitor methods to interface with the rest of the
+    // program
+    void interpret(Expr expression) {
+        try {
+            Object value = evaluate(expression);
+            System.out.println(stringify(value));
+        } catch (RuntimeError error) {
+            Lox.runtimeError(error);
+        }
+    }
+
     // convert the literal tree node into a runtime value
     @Override
     public Object visitLiteralExpr(Expr.Literal expr) {
@@ -28,14 +39,19 @@ class Interpreter implements Expr.Visitor<Object> {
 
         switch (expr.operator.type) {
             case GREATER:
+                checkNumberOperands(expr.operator, left, right);
                 return (double) left > (double) right;
             case GREATER_EQUAL:
+                checkNumberOperands(expr.operator, left, right);
                 return (double) left >= (double) right;
             case LESS:
+                checkNumberOperands(expr.operator, left, right);
                 return (double) left < (double) right;
             case LESS_EQUAL:
+                checkNumberOperands(expr.operator, left, right);
                 return (double) left <= (double) right;
             case MINUS:
+                checkNumberOperands(expr.operator, left, right);
                 return (double) left - (double) right;
             case PLUS:
                 if (left instanceof Double && right instanceof Double) {
@@ -45,10 +61,14 @@ class Interpreter implements Expr.Visitor<Object> {
                 if (left instanceof String && right instanceof String) {
                     return (String) left + (String) right;
                 }
+                throw new RuntimeError(expr.operator,
+                        "Operands must be two numbers or two strings.");
                 break;
             case SLASH:
+                checkNumberOperands(expr.operator, left, right);
                 return (double) left / (double) right;
             case STAR:
+                checkNumberOperands(expr.operator, left, right);
                 return (double) left * (double) right;
         }
         // unreachable
@@ -62,7 +82,7 @@ class Interpreter implements Expr.Visitor<Object> {
 
         switch (expr.operator.type) {
             case MINUS:
-                checkNumberOperand(expr.operator, right);
+                checkNumberOperands(expr.operator, right);
                 return -(double) right;
             case BANG:
                 return !isTruthy(right);
@@ -74,7 +94,7 @@ class Interpreter implements Expr.Visitor<Object> {
     }
 
     // helper method to ensure operand is a number
-    private void checkNumberOperand(Token operator, Object operand) {
+    private void checkNumberOperands(Token operator, Object operand) {
         if (operand instanceof Double)
             return;
         throw new RuntimeError(operator, "Operand must be a number.");
@@ -97,5 +117,20 @@ class Interpreter implements Expr.Visitor<Object> {
             return false;
 
         return a.equals(b);
+    }
+
+    // convert a runtime value to a string for printing
+    private String stringify(Object object) {
+        if (object == null)
+            return "nil";
+
+        if (object instanceof Double) {
+            String text = object.toString();
+            if (text.endsWith(".0")) {
+                text = text.substring(0, text.length() - 2);
+            }
+            return text;
+        }
+        return object.toString();
     }
 }

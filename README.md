@@ -143,7 +143,7 @@ Lox's precedence and associativity, similar to C
 A parser has two jobs
 
 - Given a valid sequence of tokens, produce a corresponding syntax tree.
-- Given an invalid sequence of tokens, detect aby errors and tell the user about their mistakes
+- Given an invalid sequence of tokens, detect any errors and tell the user about their mistakes
 
 When a parser runs into a syntax error, it must:
 
@@ -186,7 +186,7 @@ For our first interpreter, we will take the simplest shortest path and execute t
 
 ## Evaluating unary expressions
 
-- Lox follows Ruby's simple rul: false and nil are false, and everything else is Truthy
+- Lox follows Ruby's simple rule: false and nil are false, and everything else is Truthy
 
 ## Evaluating binary operators
 
@@ -198,3 +198,5 @@ For our first interpreter, we will take the simplest shortest path and execute t
 - Failures that the language semantics demand we detect and report while the program is running (hence the name)
 - The fact that Lox is implemented in Java should be hidden to the user - graceful runtime error handling. Instead, we want them to understand a Lox runtime error occured and give them a message relevant to our language and their program
 - While a runtime error needs to stop evaluating the expression, it shouldn't kill the interpreter.
+
+### Detecting Runtime Errors
