@@ -1,13 +1,20 @@
 package com.craftinginterpreters.lox;
 
-class Interpreter implements Expr.Visitor<Object> {
+import java.util.List;
+
+class Interpreter implements Expr.Visitor<Object>, Stmt.Visitor<Void> {
+
+    // store it as a field so that the variables stay in memory as long as the
+    // interpreter is still running.
+    private Enviroment enviroment = new Enviroment();
 
     // wrap a skin around the visitor methods to interface with the rest of the
     // program
-    void interpret(Expr expression) {
+    void interpret(List<Stmt> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             Lox.runtimeError(error);
         }
@@ -29,6 +36,62 @@ class Interpreter implements Expr.Visitor<Object> {
     // evaluate the grouping expression by evaluating its sub-expression
     private Object evaluate(Expr expr) {
         return expr.accept(this);
+    }
+
+    private void execute(Stmt stmt) {
+        stmt.accept(this);
+    }
+
+    // executes a list of statements in the cntext of a given enviroment
+    void executeBlock(List<Stmt> statements, Enviroment enviroment) {
+        Enviroment previous = this.enviroment;
+        try {
+            this.enviroment = enviroment;
+
+            for (Stmt statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.enviroment = previous;
+        }
+    }
+
+    @Override
+    public Void visitBlockStmt(Stmt.Block stmt) {
+        executeBlock(stmt.statements, new Enviroment(enviroment));
+        return null;
+    }
+
+    @Override
+    public Void visitExpressionStmt(Stmt.Expression stmt) {
+        evaluate(stmt.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStmt(Stmt.Print stmt) {
+        Object value = evaluate(stmt.expression);
+        System.out.println(stringify(value));
+        return null;
+    }
+
+    @Override
+    public Void visitVarStmt(Stmt.Var stmt) {
+        Object value = null;
+
+        if (stmt.initializer != null) {
+            value = evaluate(stmt.initializer);
+        }
+
+        enviroment.define(stmt.name.lexeme, value);
+        return null;
+    }
+
+    @Override
+    public Object visitAsignExpr(Expr.Assign expr) {
+        Object value = evaluate(expr.value);
+        enviroment.assign(expr.name, value);
+        return value;
     }
 
     // evaluate binary expressions
@@ -94,6 +157,11 @@ class Interpreter implements Expr.Visitor<Object> {
         // Unreachable
         return null;
 
+    }
+
+    @Override
+    public Object visitVariableExpr(Expr.Variable expr) {
+        return enviroment.get(expr.name);
     }
 
     // helper method to ensure operand is a number

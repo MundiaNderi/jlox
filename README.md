@@ -204,10 +204,42 @@ For our first interpreter, we will take the simplest shortest path and execute t
 - To support bindings, our interpreter needs internal state
   - Define a variable at the beginning of the program => Hold on to the value of the aribale => Use the ariable at the end of the program
 - State and statements go hand in hand
-  - Staemnets - A side effect.
+  - Statements - A side effect.
+  - Assignment is an expression and not a statement
 
 In Lox: - An expression statement lets you place an expression where a statement is expected. - A print statement evaluates an expression and displays the result to the user.
 Lox is an imperatie, dynamically typed language
 
 - There is no place in grammar where both an expression and a statement are allowed. Operands of + are always expressions, never statements. The body of a while loop is always a statement
   - Hence Expressions and statements are split into separate classes.
+
+- Statement produce no values, so the return type of the visit is void, not object
+
+## Global Variables
+
+- Variable declaration - brings a new variable into the world. Binds a name to a value
+- Variable expression - accesses that binding
+
+=> Declaration statements
+
+# Enviroments
+
+Where variables live in memory
+
+- A variable statement does not just define a new variable, it can be used to redefine an existing variable.
+- Currently allowed for global variables
+- It's okay to refer to a variable before its defined as log as you don't evaluate the reference.
+- Lox sets a variable to nil if it's not explicitly defined
+
+### Assignment Syntax
+
+- Assignment is right associative
+- An L value evaluates to a storage location that you can assign into.
+- We want the syntax tree to reflect that an l-value evaluates to a storage location that you can assign into.
+
+### Scopes
+
+- A scope defines a region where a name maps to a certain entity
+- Lexical scope - The text of the program itself shows where a scope begins and ends.
+- Dynamic scope - you need to execute the code to know what the variable refers to
+-
