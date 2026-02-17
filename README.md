@@ -242,4 +242,16 @@ Where variables live in memory
 - A scope defines a region where a name maps to a certain entity
 - Lexical scope - The text of the program itself shows where a scope begins and ends.
 - Dynamic scope - you need to execute the code to know what the variable refers to
--
+
+# Control Flow
+
+## Conditional Execution
+
+- Conditional or branching control flow - used to not execute some piece of code
+- Looping control flow - executes a chunk of code more than once
+
+- Lox doesn't have a conditional operator
+
+### Logical Operators
+
+- For an AND expression to evealuate to something truthy, both operands must be truthy.
