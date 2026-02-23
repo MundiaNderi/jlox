@@ -255,3 +255,9 @@ Where variables live in memory
 ### Logical Operators
 
 - For an AND expression to evealuate to something truthy, both operands must be truthy.
+
+### Desugaring
+
+- A process where the front end takes code using syntax sugar and translates it to a more primitive form that the back end already knows how to execute.
+- Lox desugars for loops, while loops and other statements that the interpreter already handles
+-
