@@ -3,8 +3,8 @@ package com.craftinginterpreters.lox;
 import java.util.HashMap;
 import java.util.Map;
 
-class Enviroment {
-    final Enviroment enclosing;
+class Environment {
+    final Environment enclosing;
     private final Map<String, Object> values = new HashMap<>();
 
     // get method to retrieve variable values
@@ -37,13 +37,13 @@ class Enviroment {
         values.put(name, value);
     }
 
-    // constructor for global enviroment
-    Enviroment() {
+    // constructor for global environment
+    Environment() {
         enclosing = null;
     }
 
     // constructr for nested / local enviroments
-    Enviroment(Enviroment enclosing) {
+    Environment(Environment enclosing) {
         this.enclosing = enclosing;
     }
 }

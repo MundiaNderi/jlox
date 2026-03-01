@@ -260,4 +260,52 @@ Where variables live in memory
 
 - A process where the front end takes code using syntax sugar and translates it to a more primitive form that the back end already knows how to execute.
 - Lox desugars for loops, while loops and other statements that the interpreter already handles
--
+
+# Functions
+
+- It is the parentheses followiing an expression that indicate a function call.
+
+# Function's Arity
+
+Arity is the fancy term for the nuber of arguments a function or operation accepts.
+3 arguments = arity 3
+
+- Statically typed languages check this at compile time and refuse to compile the code if the argument count does not match the function's arity
+- Python raises a runtime eeror if the argument list is too short or too long which is the approach we'll take with Lox.
+
+### Native Functions
+
+These are functions that the interpreter exposes to user code but are implemented in the host language(in our case Java), not the language being implemnted (lox)
+
+- Also sometimes called Primitives / External functions / Foreign functions
+- Form part of implementation's runtime
+
+Foreign function interface (FFI) - Mechanism for languages to provide their own native functions
+
+#### Telling Time
+
+- Benchmarks - programs that measure the time it takes to exercise some corner of the interpreter.
+- Nice solution - have the benchmark script itself measure the time elapsed between two points in the code
+
+#### Return Statements
+
+- Expression oriented languages - Ruby , Scheme
+- A return statement is the return keyword followed by an optional expresion and terminated by a semicolon.
+- In statically typed lanaguages, void functions don't return a value and non-void ones do.
+- Since Lox is dynamically typed, there are no true void functions
+
+#### Local Functions and Closures
+
+- Lox supports local functions that are defined inside another function, or nested inside a block.
+  Clousures
+- A data structure - closes over and holds on the surrounding variables where the function is declared.
+
+## Smalltalk Language
+
+A white paper overview: https://docs.huihoo.com/smalltalk/Smalltalk-Overview.html#:~:text=When%20a%20message%20is%20sent,of%20code%20to%20branch%20to.
+
+- Started the Object Oriented Programming revolution
+- Introduced the basic ideas of object, class, message, methd and inheritance
+- The original Just in time compiling researc was part of the Smalltalk project
+
+The basic concepts of Smalltalk are: Objects, Fields, OOPs, Classes, Methods, Messages, Inheritance, Receiver, Dynamic Binding

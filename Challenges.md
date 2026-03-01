@@ -50,3 +50,5 @@ f(x).y  # property access after call
 - Source-to-Source transformation - Transpilation - When inserting code eg logging into codebases, you must preserve comments or whitespaces to avoid breaking the code or confusing developers
 
 ### Add support to Lox’s scanner for C-style /_ ... _/ block comments. Make sure to handle newlines in them. Consider allowing them to nest. Is adding support for nesting more work than you expected? Why?
+
+#### Our interpreter carefully checks that the number of arguments passed to a function matches the number of parameters it expects. Since this check is done at runtime on every call, it has a performance cost. Smalltalk implementations don’t have that problem. Why not?
