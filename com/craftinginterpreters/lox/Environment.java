@@ -37,6 +37,27 @@ class Environment {
         values.put(name, value);
     }
 
+    Environment ancestor(int distance) {
+        Environment environment = this;
+
+        for (int i = 0; i < distance; i++) {
+            environment = environment.enclosing;
+        }
+
+        return environment;
+    }
+
+    // returns the value of the variable in that environment's map
+    Object getAt(int distance, String name) {
+        return ancestor(distance).values.get(name);
+    }
+
+    // walks a fixed number of environments and then stuffs the new value in that
+    // map
+    void assignAr(int distance, Token name, Object value) {
+        ancestor(distance).values.put(name.lexeme, value);
+    }
+
     // constructor for global environment
     Environment() {
         enclosing = null;

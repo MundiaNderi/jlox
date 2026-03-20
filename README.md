@@ -309,3 +309,29 @@ A white paper overview: https://docs.huihoo.com/smalltalk/Smalltalk-Overview.htm
 - The original Just in time compiling researc was part of the Smalltalk project
 
 The basic concepts of Smalltalk are: Objects, Fields, OOPs, Classes, Methods, Messages, Inheritance, Receiver, Dynamic Binding
+
+# Resolving and Binding
+
+- A variable usage refers to the preceding declaration with the same name in the innermost scope that encloses the expression where the variable is used.
+
+## Scopes and mutable enviroments
+
+- We create a new environment when we enter a new scope, and discard it when we leave the scope.
+- Consider all of the code within a block as being within the same scope, so our interpreter usues a single environment to represent that. Each environment is a mutable hash table
+
+### Persistent environments and persistent data structures
+
+- A persistent data structure can never be directly modified.
+- Any modification to an existing structure produces a new object that contains all of the original data and the new modification
+- A closure retains a reference to the Environment instance in play when the function was declared.
+
+### Semantic Analysis
+
+- Static scope - a variable usage always resolves to the same declatation
+
+Solution: Resolve each vatiable once ie, Semantic Analysis -> write a chunk of code that inspects the user's program, finds every variable mentioned and figures out which declaration it refers to.
+
+Our resolver:
+
+- Each time it visits a variable, it tells the interpreter how many scopes thereare between the current scope and he scope where the variable is defined
+- At runtime, this correspons to the number of enviroments between the current one and the enclosing one where the interpreter can find rhe ariable's value
