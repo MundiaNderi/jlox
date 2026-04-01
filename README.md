@@ -333,5 +333,87 @@ Solution: Resolve each vatiable once ie, Semantic Analysis -> write a chunk of c
 
 Our resolver:
 
-- Each time it visits a variable, it tells the interpreter how many scopes thereare between the current scope and he scope where the variable is defined
-- At runtime, this correspons to the number of enviroments between the current one and the enclosing one where the interpreter can find rhe ariable's value
+- Each time it visits a variable, it tells the interpreter how many scopes thereare between the current scope and the scope where the variable is defined
+- At runtime, this corresponds to the number of enviroments between the current one and the enclosing one where the interpreter can find the variable's value
+- We always have to keep the resolver's scope chains and the interpreters linked environments in sync with each other.
+- At runtime, we create the environment after we find the method on the instance
+
+# Classes
+
+There are three broad paths to Object oriented programming:
+
+- Classes - came first and are the most popular
+- Prototypes - the key idea is that an object can spawn other objects similar to itself
+- Multimethods
+
+The main goal is to bundle data with the code that acts on it. Users do by that by declaring a class that:
+
+- Exposes a constructor to create and initialize new instances of the class
+- Provides a way to store and access fields on instances
+- Defines a set of methods shared by all instances of the class that operate on each instances' state.
+
+### Properties on Instances
+
+Lox follows JavaScript and Python in how it handles state. Every instance is an open collection of named values. Methods on the instance’s class can access and modify properties, but so can outside code.
+
+- Properties are accessed using a . syntax.
+
+```
+someObject.someProperty
+```
+
+- In Lox, only instances of classes have properties. If the object uses some other type like a number, invoking a getter on it is a runtime error.
+- Fields are named bits of state stored directly in an instance
+- Properties are the named things that a get expression may return
+
+### Set Expressions
+
+- Setters use the same syntax as getters, except they appear on the left side of an assignment
+- Unlike getters, setters don't chain. However, the reference to call allows any high-precedence expression before the last dot, including any number of getters.
+
+#### Methods on Classes
+
+- Instances are just maps and all instances are more or less the same.
+- To make them feel like instances of classes, we need behaviour methods
+- A method call chains getters and function calls together
+
+```
+object.method(argument)
+```
+
+- Like Python and C# we will have methods "bind" this to the original instance when the method is first grabbed. Python calls these bound methods
+- Where an instance stores state, class stores behaviour
+- When accessing a property, you might get a field - a bit of state stored on the instace - or you could hit a method defined on the instance's class.
+
+## This
+
+- Inside a method body a this expression ealuates to the instance that the method was called on.
+  - Since methods are accessed and then invoked as two steps, it will refer to the object that the method was accessed from.
+  - Whenever a this expression is encountered, (at least inside a method) it will resolve to a local variable defined in an implicit scope just oustdoe of the block for the method body
+  -
+
+## Constructors and Initializers
+
+- Methods and fields let us encapsulate state and behaviour together so that an object always stays in valid configuration.
+- To ensure a brand new object starts in a good state, we need constructors.
+
+Constructing an object is a actually a pair of operations:
+
+- The runtime allocates the memory required for a fresh instance
+  - In most languages, this operation is at a fundamental level beneath what user code is able to access
+- Then, a user provided chunkc of code is called which initializes the unformed object.
+- In Lox, init() methids always return this, even when directly called.
+  Python -> init()
+
+# Prototypes
+
+- LoxClass - where behaviour for the objects lies
+- LoxInstance - where we define state
+
+- What if you could define methods right on a single object, inside LoxInstance? LoxClass would not be needed at all
+  - Prototypes are simpler than classes
+    - Reuse behaviour accross multiple instances without classes
+    - An instance delegates directly to another instance to reuse its fields and methods, like inheritance
+
+With prototypes, objects inherit directly from other objects.
+With classes, classes inherit directly from other classes.

@@ -54,7 +54,7 @@ class Environment {
 
     // walks a fixed number of environments and then stuffs the new value in that
     // map
-    void assignAr(int distance, Token name, Object value) {
+    void assignAt(int distance, Token name, Object value) {
         ancestor(distance).values.put(name.lexeme, value);
     }
 

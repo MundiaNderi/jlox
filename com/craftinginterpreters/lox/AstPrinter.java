@@ -45,6 +45,21 @@ class AstPrinter implements Expr.Visitor<String> {
         return parenthesize(expr.operator.lexeme, expr.left, expr.right);
     }
 
+    @Override
+    public String visitCallExpr(Expr.Call expr) {
+        return "(call " + print(expr.callee) + ")";
+    }
+
+    @Override
+    public String visitGetExpr(Expr.Get expr) {
+        return "(get " + expr.name.lexeme + ")";
+    }
+
+    @Override
+    public String visitSetExpr(Expr.Set expr) {
+        return "(set " + expr.name.lexeme + ")";
+    }
+
     // takes a name and a list of expressions and wraps them in parantheses,
     // yielding a string like (+ 1 2)
     private String parenthesize(String name, Expr... exprs) {
