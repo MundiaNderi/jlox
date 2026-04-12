@@ -365,6 +365,7 @@ someObject.someProperty
 - In Lox, only instances of classes have properties. If the object uses some other type like a number, invoking a getter on it is a runtime error.
 - Fields are named bits of state stored directly in an instance
 - Properties are the named things that a get expression may return
+- Lox has no root Object class that everything inherits from, so when you omit the superclass clause, the class has no superclass, not even an implicit one.
 
 ### Set Expressions
 
@@ -402,7 +403,7 @@ Constructing an object is a actually a pair of operations:
 - The runtime allocates the memory required for a fresh instance
   - In most languages, this operation is at a fundamental level beneath what user code is able to access
 - Then, a user provided chunkc of code is called which initializes the unformed object.
-- In Lox, init() methids always return this, even when directly called.
+- In Lox, init() methods always return this, even when directly called.
   Python -> init()
 
 # Prototypes
@@ -417,3 +418,25 @@ Constructing an object is a actually a pair of operations:
 
 With prototypes, objects inherit directly from other objects.
 With classes, classes inherit directly from other classes.
+
+# Inheritance
+
+- We use the less than sign (<) to specify a superclass when declaring a class.
+
+```
+class Doughnut {
+  // General doughnut stuff...
+}
+
+class BostonCream < Doughnut {
+  // Boston Cream-specific stuff...
+}
+```
+
+- Since classs are usually declared at the top level, the superclass name will most likely be a global variable
+  - Lox allow class declarations even inside blocks, so it's possible the superclass name refers to a local variable
+
+## Inheriting Methods
+
+- We only create a superclass environment if the class actually has a superclass.
+- Lox supports only single inheritance - a class may have a single superclass and that's the only way to reuse methods across classes.
